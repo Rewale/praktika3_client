@@ -1,0 +1,90 @@
+﻿<Window x:Class="ServiceClient_app.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ServiceClient_app"
+        xmlns:viewModel ="clr-namespace:ServiceClient_app.MVVM.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="650" Width="800">
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="TextBlock" x:Key="DiscountVisibleTrigger">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Discount}"
+                        Value="0">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="12*"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ComboBox ItemsSource="{Binding optionsSort}" DisplayMemberPath="Title" SelectionChanged="ComboBox_SelectionChanged"></ComboBox>
+            <ComboBox Grid.Column="1" ItemsSource="{Binding DiscountOptions}" DisplayMemberPath="Title" SelectionChanged="ComboBox_SelectionChanged"></ComboBox>
+        </Grid>
+        <ListView Grid.Row="1" ItemsSource="{Binding services, NotifyOnSourceUpdated=True}" 
+                  SelectedItem="{Binding selectedService}"                  
+                  SelectionMode="Single"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  HorizontalContentAlignment="Stretch">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Image}" Width="200" Height="150" Grid.RowSpan="4"></Image>
+                        <TextBlock Margin="5 10" Text="{Binding Title}" Grid.ColumnSpan="3" TextWrapping="WrapWithOverflow" Grid.Column="1"></TextBlock>
+                        <StackPanel Margin="5 10" Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal" Grid.Column="1">
+                            <TextBlock Text="{Binding LastPrice}" Style="{StaticResource discountPrice}"></TextBlock>
+                            <TextBlock Text="{Binding StringFormat={} {0} рублей, Path=CurrentPrice}"/>
+                            <TextBlock Text="{Binding StringFormat={} за {0} минут, Path=DurationMin}"/>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource DiscountVisibleTrigger}" Margin="5 10" Grid.Column="1" Grid.Row="2" Text="{Binding StringFormat=* скидка {0}%, Path=Discount}"/>
+                        <StackPanel Margin="5 10" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                            <Button Style="{StaticResource addFon}" Command="{Binding EditCommand}" Margin="0 0 5 0" Content="редактировать"></Button>
+                            <Button Command="{Binding DeleteCommand}" CommandParameter="{Binding id}" Style="{StaticResource attencionFon}" Content="удалить"></Button>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock  Margin="5 10">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} из {1}">
+                        <Binding Path="CurrentCount" />
+                        <Binding Path="TotalCount" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Button Style="{StaticResource addFon}" Command="{Binding AddCommand}" Margin="0 0 5 0" Grid.Column="1" Content="Добавить"></Button>
+        </Grid>
+    </Grid>
+</Window>

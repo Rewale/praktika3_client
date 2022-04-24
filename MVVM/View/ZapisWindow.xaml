@@ -1,0 +1,27 @@
+﻿<Window x:Class="ServiceClient_app.MVVM.View.ZapisWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ServiceClient_app.MVVM.View"
+        mc:Ignorable="d"
+        Title="ZapisWindow" Height="300" Width="300">
+    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+        <TextBlock Margin="5 10" x:Name="serviceTextBlock">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="Услгуа {0} {1} мин.">
+                    <Binding Path= "Title" />
+                    <Binding Path= "DurationMin" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <TextBlock Margin="5 10">Клиент:</TextBlock>
+        <ComboBox Margin="5 10" DisplayMemberPath="FIO" x:Name="clients"></ComboBox>
+
+        <TextBlock Margin="5 10">Время записи:</TextBlock>
+        <DatePickerTextBox x:Name="date"></DatePickerTextBox>
+        
+
+        <Button Margin="5 10" Style="{StaticResource addFon}" Click="Button_Click" HorizontalAlignment="Center" Content="Записать"></Button>
+    </StackPanel>
+</Window>
